@@ -1,13 +1,13 @@
 import { useCallback, useRef, useState } from 'react';
 
-type execFn = (token: AbortController) => Promise<any>;
+type execFn = (token: AbortController) => Promise<unknown>;
 
 export const useData = (defaultValue = null) => {
-  const [response, setResponse] = useState<any>(defaultValue);
+  const [response, setResponse] = useState<unknown>(defaultValue);
   const [status, setStatus] = useState('IDLE');
   const cancelRef = useRef<AbortController | null>(null);
 
-  const requestor = useCallback((fn: execFn) => {
+  const requestor = useCallback(async (fn: execFn) => {
     async function go() {
       if (cancelRef.current != null) {
         cancelRef.current.abort();
@@ -15,12 +15,11 @@ export const useData = (defaultValue = null) => {
       cancelRef.current = new AbortController();
 
       setStatus('LOADING');
-      const res = await fn(cancelRef.current);
-      setResponse(res);
+      setResponse(await fn(cancelRef.current));
       setStatus('IDLE');
     }
-    go();
+    await go();
   }, []);
 
-  return [{ ...response, status }, requestor];
+  return [{ ...(response ?? {}), status }, requestor];
 };
