@@ -26,7 +26,8 @@
         "types": [
             "node",
             "jest",
-            "@testing-library/jest-dom"
+            "@testing-library/jest-dom",
+            "@testing-library/react"
         ],
     },
     "include": [
@@ -34,6 +35,7 @@
     ], // Specifies the directory to include when searching for TypeScript files.
     "exclude": [
         "src/**/__docs__",
-        "src/**/__test__"
+        "src/**/__test__",
+        "src/**/*.test.*"
     ]
 }
