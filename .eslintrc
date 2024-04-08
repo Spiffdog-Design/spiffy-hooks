@@ -18,11 +18,11 @@
         "plugin:react/recommended", // React recommended rules
         "plugin:@typescript-eslint/recommended", // TypeScript recommended rules
         "plugin:@typescript-eslint/eslint-recommended", // ESLint overrides for TypeScript
-        "plugin:prettier/recommended", // Prettier plugin integration
         "plugin:react-hooks/recommended", // Recommended rules for React hooks
-        "plugin:storybook/recommended" // Recommended rules for Storybook
+        "plugin:storybook/recommended", // Recommended rules for Storybook
+        "plugin:prettier/recommended" // Prettier plugin integration
     ],
     "rules": {
-        "react/react-in-jsx-scope": "off",
+        "react/react-in-jsx-scope": "off" // Disable React import in JSX files
     }
 }

@@ -2,6 +2,11 @@ import { useCallback, useRef, useState } from 'react';
 
 type execFn = (token: AbortController) => Promise<unknown>;
 
+/**
+ * @description A custom hook to fetch data from an API.
+ * @param {unknown} defaultValue The default value to return if no data is fetched.
+ * @returns {Array} An array containing the fetched data and the request function.
+ */
 export const useData = (defaultValue = null) => {
   const [response, setResponse] = useState<unknown>(defaultValue);
   const [status, setStatus] = useState('IDLE');
