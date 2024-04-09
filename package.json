@@ -26,10 +26,9 @@
   },
   "scripts": {
     "build": "tsc --p ./tsconfig-build.json && vite build",
-    "bump-alpha": "npm version preminor --preid alpha",
-    "bump-beta": "npm version preminor --preid beta",
-    "bump-premajor": "npm version premajor",
-    "bump-preminor": "npm version preminor",
+    "bump-major": "npm version premajor",
+    "bump-minor": "npm version preminor",
+    "bump-patch": "npm version prepatch",
     "bump-release": "npm version prerelease",
     "format": "prettier --write --parser typescript '**/*.{ts,tsx}'",
     "lint": "eslint . --ext .ts,.tsx --ignore-path .gitignore --fix",
