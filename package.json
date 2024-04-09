@@ -1,7 +1,7 @@
 {
   "name": "@spiffdog/spiffy-hooks",
   "private": false,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "type": "module",
   "main": "dist/index.cjs.js",
@@ -26,6 +26,11 @@
   },
   "scripts": {
     "build": "tsc --p ./tsconfig-build.json && vite build",
+    "bump-alpha": "npm version preminor --preid alpha",
+    "bump-beta": "npm version preminor --preid beta",
+    "bump-premajor": "npm version premajor",
+    "bump-preminor": "npm version preminor",
+    "bump-release": "npm version prerelease",
     "format": "prettier --write --parser typescript '**/*.{ts,tsx}'",
     "lint": "eslint . --ext .ts,.tsx --ignore-path .gitignore --fix",
     "test": "vitest run",

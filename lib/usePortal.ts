@@ -1,4 +1,4 @@
-import type { ReactPortal, ReactNode } from 'react';
+import type { PropsWithChildren } from 'react';
 
 import { useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
@@ -23,7 +23,7 @@ export const usePortal = (el: Element) => {
     };
   }, [wrapper]);
 
-  return (children: ReactNode): ReactPortal | null => {
-    return createPortal(children, wrapper);
+  return (props: PropsWithChildren) => {
+    return createPortal(props.children, wrapper);
   };
 };
