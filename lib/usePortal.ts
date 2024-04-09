@@ -7,11 +7,11 @@ import { createPortal } from 'react-dom';
  * @description A custom hook that allows you to use a React portal.
  * @returns {Function} A function that will allow you to use the portal.
  */
-export const usePortal = (el: Element) => {
+export const usePortal = () => {
   // Creates only one instance of div.
   const wrapper = useMemo(() => {
-    return el != null ? el : document.createElement('div');
-  }, [el]);
+    return document.createElement('div');
+  }, []);
 
   useEffect(() => {
     // Adds div tag to body.
@@ -23,7 +23,10 @@ export const usePortal = (el: Element) => {
     };
   }, [wrapper]);
 
-  return (props: PropsWithChildren) => {
-    return createPortal(props.children, wrapper);
-  };
+  console.log();
+
+  const portal = (props: PropsWithChildren) =>
+    createPortal(props.children, wrapper);
+
+  return portal;
 };
