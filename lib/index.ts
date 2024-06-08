@@ -1,5 +1,5 @@
-export { useData } from './useData/useData';
-export { useOutsideClick } from './useOutsideClick/useOutsideClick';
-export { usePortal } from './usePortal/usePortal';
-export { useUrlParam } from './useUrlParam/useUrlParam';
-export { useUrlParamReactRouter } from './useUrlParam/useUrlParamReactRouter';
+export * from './useData/useData';
+export * from './useOutsideClick/useOutsideClick';
+export * from './usePortal/usePortal';
+export * from './useUrlParam/useUrlParam';
+export * from './useUrlParam/useUrlParamReactRouter';

@@ -25,8 +25,7 @@ export const usePortal = () => {
 
   console.log();
 
-  const portal = (props: PropsWithChildren) =>
-    createPortal(props.children, wrapper);
+  const portal = (props: PropsWithChildren) => createPortal(props.children, wrapper);
 
   return portal;
 };

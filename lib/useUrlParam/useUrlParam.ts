@@ -6,17 +6,12 @@ import { useState } from 'react';
  * @param {string | number | null} defaultValue The default value to set if the URL parameter is not found.
  * @returns {Array} An array containing the URL parameter value and a setter function.
  */
-export const useUrlParam = (
-  param: string,
-  defaultValue: string | number | null = null,
-) => {
+export const useUrlParam = (param: string, defaultValue: string | number | null = null) => {
   const { search, pathname } = window.location;
   const url = new URLSearchParams(search);
 
   const paramVal = url.get(param);
-  const [value, setValue] = useState<string>(
-    paramVal !== null ? paramVal : String(defaultValue),
-  );
+  const [value, setValue] = useState<string>(paramVal !== null ? paramVal : String(defaultValue));
 
   function setter(val: string | ((value: string) => string)) {
     if (typeof val === 'function') {

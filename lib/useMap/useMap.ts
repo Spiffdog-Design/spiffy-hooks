@@ -11,10 +11,7 @@ type UseMapActions<K, V> = {
   /** Set all key-value pairs in the map. */
   setAll: (entries: MapOrEntries<K, V>) => void;
 };
-type UseMapReturn<K, V> = [
-  Omit<Map<K, V>, 'set' | 'clear' | 'delete'>,
-  UseMapActions<K, V>,
-];
+type UseMapReturn<K, V> = [Omit<Map<K, V>, 'set' | 'clear' | 'delete'>, UseMapActions<K, V>];
 
 /**
  * Custom hook that manages a key-value [`Map`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) state with setter actions.
@@ -29,9 +26,7 @@ type UseMapReturn<K, V> = [
  * // Access the `map` state and use `actions` to set, remove, or reset entries.
  * ```
  */
-export function useMap<K, V>(
-  initialState: MapOrEntries<K, V> = new Map(),
-): UseMapReturn<K, V> {
+export function useMap<K, V>(initialState: MapOrEntries<K, V> = new Map()): UseMapReturn<K, V> {
   const [map, setMap] = useState(new Map(initialState));
 
   const actions: UseMapActions<K, V> = {
