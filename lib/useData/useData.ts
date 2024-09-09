@@ -1,64 +1,82 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { useDebug } from '../useDebug/useDebug';
 
-export type UseDataExecuteFn = (controller: AbortController) => Promise<Response>;
-export type UseDataRequestor = (fn: UseDataExecuteFn) => Promise<void>;
-export type UseDataReturn<T> = [UseDataResponse<T>, UseDataRequestor];
-export type UseDataStatuses = 'IDLE' | 'FETCHING' | 'RESPONDING';
-export type UseDataOptions = {
-  debug?: boolean;
-};
-export type UseDataResponse<T> = {
+enum Statuses {
+  IDLE = 'IDLE',
+  FETCHING = 'FETCHING',
+  RESPONDING = 'RESPONDING',
+  ERROR = 'ERROR',
+  SUCCESS = 'SUCCESS',
+}
+
+interface DataResponse<T> {
+  raw: never | null;
   data: T | null;
-  raw: Response | null;
-  status: UseDataStatuses;
-};
+  status: Statuses;
+  success: boolean;
+}
 
-const defaultResponse = { raw: null, data: null, status: 'IDLE' };
+const defaultResponse: DataResponse<null> = { raw: null, data: null, status: Statuses.IDLE, success: false };
+
+const validateStatus = (status: number) => status < 500; // Only throw errors for server exceptions.
+
+interface UseDataOptions<T> {
+  initialValue?: T;
+  debug?: boolean;
+}
 
 /**
  * @description A custom hook to fetch data from an API.
- * @param {boolean} options Options settings for the hook.
- * @returns {T} An object or array of type T.
+ * @param {UseDataOptions<T>} options Options settings for the hook.
+ * @returns {[DataResponse<T>, (fn: (params: { signal: AbortSignal, validateStatus: (status: number) => boolean }) => Promise<any>) => Promise<void>]} An object or array of type T.
  */
-export function useData<T>({ debug }: UseDataOptions = { debug: false }): UseDataReturn<T> {
-  const [response, setResponse] = useState<UseDataResponse<T> | null>(null);
-  const [status, setStatus] = useState<UseDataStatuses>('IDLE');
+export function useData<T>(
+  options?: UseDataOptions<T>,
+): [
+  DataResponse<T>,
+  (
+    fn: (params: { signal: AbortSignal; validateStatus: (status: number) => boolean }) => Promise<Response>,
+  ) => Promise<void>,
+] {
+  const { initialValue = null, debug = false } = options ?? {};
+
   const cancelRef = useRef<AbortController | null>(null);
-
-  useEffect(() => {
-    if (debug === true) console.log('Fetch Response: ', response);
-  }, [debug, response]);
-
-  useEffect(() => {
-    if (debug === true) console.log('Fetch Status: ', status);
-  }, [debug, status]);
+  const [response, setResponse] = useState<DataResponse<T>>({
+    ...defaultResponse,
+    data: initialValue,
+  });
 
   const resp = useMemo(() => {
-    return {
-      ...(response ?? defaultResponse),
-      status,
-    };
-  }, [response, status]);
+    return response ?? defaultResponse;
+  }, [response]);
 
-  const requestor: UseDataRequestor = useCallback(async (fn: UseDataExecuteFn) => {
-    async function go() {
+  const requestor = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async (fn: (params: { signal: AbortSignal; validateStatus: (status: number) => boolean }) => Promise<any>) => {
       if (cancelRef.current != null) {
         cancelRef.current.abort('Canceled');
       }
       cancelRef.current = new AbortController();
 
-      setStatus('FETCHING');
-      const res = await fn(cancelRef.current);
-      const data = (await res.json()) as T;
-      setResponse({
-        raw: res,
-        data,
-        status: 'RESPONDING',
-      });
-      setStatus('IDLE');
-    }
-    await go();
-  }, []);
+      setResponse((resp) => ({ ...resp, status: Statuses.FETCHING }));
+      try {
+        const res = await fn({ signal: cancelRef.current.signal, validateStatus });
+        const data = res?.json != null ? await res.json() : res.data;
+        setResponse({
+          raw: res,
+          data,
+          status: Statuses.SUCCESS,
+          success: true,
+        });
+      } catch (err) {
+        console.log(Statuses.ERROR, err);
+        setResponse((resp) => ({ ...resp, status: Statuses.ERROR, success: false }));
+      }
+    },
+    [],
+  );
 
-  return [resp, requestor] as UseDataReturn<T>;
+  useDebug(response, 'Fetch Response: ', { enabled: debug });
+
+  return [resp, requestor];
 }

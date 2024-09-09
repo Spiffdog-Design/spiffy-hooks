@@ -1,26 +1,21 @@
 import { useEffect } from 'react';
 
+interface DebugConfig {
+  basic?: boolean;
+  collapsed?: boolean;
+  enabled?: boolean;
+  trace?: boolean;
+}
+
 /**
  * @description A custom hook to fetch data from an API.
- * @param {boolean} options Options settings for the hook.
- * @returns {T} An object or array of type T.
+ * @param {any} value value to show.
+ * @param {string} label Log label. Defaults to 'DEBUG:'.
+ * @param {DebugConfig} config Options settings for the hook. Optional.
  */
-export type DebugOptions = {
-  basic: boolean;
-  collapsed: boolean;
-  enabled: boolean;
-  label: string;
-  trace: boolean;
-  value: unknown;
-};
-export function useDebug({
-  basic = true,
-  collapsed = true,
-  enabled = true,
-  label = 'DEBUG: ',
-  trace = false,
-  value = null,
-}: DebugOptions) {
+export function useDebug(value: unknown = null, label: string = 'DEBUG:', config?: DebugConfig): void {
+  const { basic = true, collapsed = true, enabled = true, trace = false } = config ?? {};
+
   useEffect(() => {
     if (enabled) {
       if (basic) {
