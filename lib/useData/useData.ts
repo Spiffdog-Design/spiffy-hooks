@@ -1,13 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useDebug } from '../useDebug/useDebug';
 
-enum Statuses {
-  IDLE = 'IDLE',
-  FETCHING = 'FETCHING',
-  RESPONDING = 'RESPONDING',
-  ERROR = 'ERROR',
-  SUCCESS = 'SUCCESS',
-}
+export type Statuses = 'IDLE' | 'FETCHING' | 'RESPONDING' | 'ERROR' | 'SUCCESS';
 
 interface DataResponse<T> {
   raw: never | null;
@@ -16,7 +10,7 @@ interface DataResponse<T> {
   success: boolean;
 }
 
-const defaultResponse: DataResponse<null> = { raw: null, data: null, status: Statuses.IDLE, success: false };
+const defaultResponse: DataResponse<null> = { raw: null, data: null, status: 'IDLE', success: false };
 
 const validateStatus = (status: number) => status < 500; // Only throw errors for server exceptions.
 
@@ -58,19 +52,19 @@ export function useData<T>(
       }
       cancelRef.current = new AbortController();
 
-      setResponse((resp) => ({ ...resp, status: Statuses.FETCHING }));
+      setResponse((resp) => ({ ...resp, status: 'FETCHING' }));
       try {
         const res = await fn({ signal: cancelRef.current.signal, validateStatus });
         const data = res?.json != null ? await res.json() : res.data;
         setResponse({
           raw: res,
           data,
-          status: Statuses.SUCCESS,
+          status: 'SUCCESS',
           success: true,
         });
       } catch (err) {
-        console.log(Statuses.ERROR, err);
-        setResponse((resp) => ({ ...resp, status: Statuses.ERROR, success: false }));
+        console.log('ERROR', err);
+        setResponse((resp) => ({ ...resp, status: 'ERROR', success: false }));
       }
     },
     [],
