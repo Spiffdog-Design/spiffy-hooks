@@ -55,7 +55,7 @@ export function useData<T>(
       setResponse((resp) => ({ ...resp, status: 'FETCHING' }));
       try {
         const res = await fn({ signal: cancelRef.current.signal, validateStatus });
-        const data = res?.json != null ? await res.json() : res.data;
+        const data = res?.json != null ? await res.json() : res?.data;
         setResponse({
           raw: res,
           data,
