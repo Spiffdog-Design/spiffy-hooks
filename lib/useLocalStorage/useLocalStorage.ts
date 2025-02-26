@@ -1,39 +1,39 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
+
+const eventName = 'local-storage';
 
 export function useLocalStorage(key: string, initialValue: unknown) {
-  const [storedValue, setStoredValue] = useState(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.error(error);
-      return initialValue;
+  const item = useSyncExternalStore(
+    subscribe,
+    () => getSnapshot,
+    () => undefined,
+  );
+
+  const getSnapshot = (): unknown => parse(localStorage.getItem(key));
+
+  const setValue = (value: unknown) => {
+    const v = parse(value);
+    localStorage.setItem(key, JSON.stringify(v));
+    window.dispatchEvent(new Event(eventName));
+  };
+
+  useEffect(() => {
+    if (initialValue !== undefined) {
+      setValue(initialValue);
     }
   });
 
-  useEffect(() => {
-    try {
-      const serializedValue = JSON.stringify(storedValue);
-      window.localStorage.setItem(key, serializedValue);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [key, storedValue]);
+  return [item, setValue];
+}
 
-  useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === key) {
-        try {
-          setStoredValue(event.newValue ? JSON.parse(event.newValue) : initialValue);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    };
+function parse(value: unknown) {
+  return typeof value === 'string' ? JSON.parse(value) : value;
+}
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, [key, initialValue]);
-
-  return [storedValue, setStoredValue];
+function subscribe(callback: () => void) {
+  window.addEventListener(eventName, () => {
+    console.log('event');
+    callback();
+  });
+  return () => window.removeEventListener(eventName, callback);
 }
