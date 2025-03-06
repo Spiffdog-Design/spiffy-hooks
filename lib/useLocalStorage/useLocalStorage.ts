@@ -1,39 +1,39 @@
-import { useEffect, useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
 
-const eventName = 'local-storage';
+const eventName = 'local-storage-change';
 
 export function useLocalStorage(key: string, initialValue: unknown) {
-  const item = useSyncExternalStore(
-    subscribe,
-    () => getSnapshot,
-    () => undefined,
-  );
-
-  const getSnapshot = (): unknown => parse(localStorage.getItem(key));
+  const [item, setItem] = useState<unknown>(getSnapshot(key));
 
   const setValue = (value: unknown) => {
-    const v = parse(value);
-    localStorage.setItem(key, JSON.stringify(v));
-    window.dispatchEvent(new Event(eventName));
+    localStorage.setItem(key, JSON.stringify(parse(value)));
+    window.dispatchEvent(new StorageEvent(eventName, { bubbles: true }));
+  };
+
+  const handleLocalStorageChange = () => {
+    setItem(getSnapshot(key));
   };
 
   useEffect(() => {
-    if (initialValue !== undefined) {
-      setValue(initialValue);
+    if (initialValue != null) {
+        setValue(initialValue);
     }
-  });
+  }, [initialValue]);
+
+  useEffect(() => {
+    window.addEventListener(eventName, handleLocalStorageChange);
+    return () => {
+        window.removeEventListener(eventName, handleLocalStorageChange);
+    };
+  }, [handleLocalStorageChange]);
 
   return [item, setValue];
 }
 
-function parse(value: unknown) {
-  return typeof value === 'string' ? JSON.parse(value) : value;
+function getSnapshot(key: string) {
+  return parse(localStorage.getItem(key));
 }
 
-function subscribe(callback: () => void) {
-  window.addEventListener(eventName, () => {
-    console.log('event');
-    callback();
-  });
-  return () => window.removeEventListener(eventName, callback);
+function parse(value: unknown) {
+  return typeof value === 'string' ? JSON.parse(value) : value;
 }
