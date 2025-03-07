@@ -24,10 +24,7 @@
         "noFallthroughCasesInSwitch": true, // Requires handling all cases in a switch statement.
         "declaration": true, // Generates declaration files for TypeScript.
         "types": [
-            "node",
-            "jest",
-            "@testing-library/jest-dom",
-            "@testing-library/react"
+            "node"
         ],
     },
     "include": [
@@ -35,8 +32,6 @@
         "lib"
     ], // Specifies the directory to include when searching for TypeScript files.
     "exclude": [
-        "src/**/__docs__",
-        "src/**/__test__",
-        "src/**/*.test.*"
+        "node_modules"
     ]
 }
