@@ -1,29 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const eventName = 'local-storage-change';
 
 export function useLocalStorage(key: string, initialValue: unknown) {
   const [item, setItem] = useState<unknown>(getSnapshot(key));
 
-  const setValue = (value: unknown) => {
-    localStorage.setItem(key, JSON.stringify(parse(value)));
-    window.dispatchEvent(new StorageEvent(eventName, { bubbles: true }));
-  };
+  const setValue = useCallback(
+    (value: unknown) => {
+      localStorage.setItem(key, JSON.stringify(parse(value)));
+      window.dispatchEvent(new StorageEvent(eventName, { bubbles: true }));
+    },
+    [key],
+  );
 
-  const handleLocalStorageChange = () => {
+  const handleLocalStorageChange = useCallback(() => {
     setItem(getSnapshot(key));
-  };
+  }, [key]);
 
   useEffect(() => {
     if (initialValue != null) {
-        setValue(initialValue);
+      setValue(initialValue);
     }
-  }, [initialValue]);
+  }, [initialValue, setValue]);
 
   useEffect(() => {
     window.addEventListener(eventName, handleLocalStorageChange);
     return () => {
-        window.removeEventListener(eventName, handleLocalStorageChange);
+      window.removeEventListener(eventName, handleLocalStorageChange);
     };
   }, [handleLocalStorageChange]);
 
