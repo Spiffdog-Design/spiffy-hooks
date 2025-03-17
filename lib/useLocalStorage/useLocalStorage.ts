@@ -37,5 +37,6 @@ function getSnapshot(key: string) {
 }
 
 function parse(value: unknown) {
-  return typeof value === 'string' ? JSON.parse(value) : value;
+  const v = typeof value === 'function' ? value() : value;
+  return typeof value === 'string' ? JSON.parse(v) : v;
 }
