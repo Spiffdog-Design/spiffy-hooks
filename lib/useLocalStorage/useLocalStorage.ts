@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 const eventName = 'local-storage-change';
 
 export function useLocalStorage(key: string, initialValue: unknown) {
-  const [item, setItem] = useState<unknown>(getSnapshot(key));
+  const [item, setItem] = useState<unknown>(null);
 
   const setValue = useCallback(
     (value: unknown) => {
@@ -18,10 +18,9 @@ export function useLocalStorage(key: string, initialValue: unknown) {
   }, [key]);
 
   useEffect(() => {
-    if (initialValue != null) {
-      setValue(initialValue);
-    }
-  }, [initialValue, setValue]);
+    const snapshot = getSnapshot(key);
+    setValue(snapshot != null ? snapshot : initialValue);
+  }, [key, initialValue, setValue]);
 
   useEffect(() => {
     window.addEventListener(eventName, handleLocalStorageChange);
