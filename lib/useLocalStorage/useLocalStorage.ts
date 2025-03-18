@@ -3,12 +3,21 @@ import { useCallback, useEffect, useState } from 'react';
 const eventName = 'local-storage-change';
 
 export function useLocalStorage(key: string, initialValue: unknown) {
-  const [item, setItem] = useState<unknown>(null);
+  const [item, setItem] = useState<unknown>(undefined);
 
   const setValue = useCallback(
     (value: unknown) => {
-      localStorage.setItem(key, JSON.stringify(parse(value)));
-      window.dispatchEvent(new StorageEvent(eventName, { bubbles: true }));
+      const oldValue = window.localStorage.getItem(key) ?? '';
+      const newValue = JSON.stringify(parse(value));
+
+      localStorage.setItem(key, newValue);
+      window.dispatchEvent(
+        new StorageEvent(eventName, {
+          key,
+          oldValue,
+          newValue,
+        }),
+      );
     },
     [key],
   );
