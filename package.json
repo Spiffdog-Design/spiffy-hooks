@@ -1,6 +1,6 @@
 {
   "name": "@spiffdog/spiffy-hooks",
-  "version": "0.0.10-4",
+  "version": "0.0.10-5",
   "description": "",
   "type": "module",
   "main": "dist/index.cjs.js",
@@ -54,7 +54,7 @@
     "vite-plugin-dts": "^4.5.3"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": ">=18.0.0"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.14.0"
