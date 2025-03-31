@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "main": "dist/index.cjs.js",
-  "module": "dist/index.es.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [],
   "author": "",
@@ -36,6 +36,7 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@types/node": "^22.13.14",
     "@types/react": "^18.2.73",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",

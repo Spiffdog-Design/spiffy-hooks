@@ -9,7 +9,7 @@ export default defineConfig({
     copyPublicDir: false, // Disables copying the public directory to the output directory.
     lib: {
       entry: './lib/index.ts', // Specifies the entry point for building the library.
-      fileName: (format) => `index.${format}.js`, // Generates the output file name based on the format.
+      fileName: (format) => (format === 'es' ? 'index.js' : `index.${format}.js`), // Generates the output file name based on the format.
       formats: ['cjs', 'es'], // Specifies the output formats (CommonJS and ES modules).
     },
     rollupOptions: {
