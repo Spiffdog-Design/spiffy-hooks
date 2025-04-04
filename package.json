@@ -1,6 +1,6 @@
 {
   "name": "@spiffdog/spiffy-hooks",
-  "version": "0.0.10-5",
+  "version": "0.0.10-6",
   "description": "",
   "type": "module",
   "main": "dist/index.cjs.js",
