@@ -7,7 +7,7 @@ export function useLocalStorage(key: string, initialValue: unknown) {
 
   const setValue = useCallback(
     (value: unknown) => {
-      const oldValue = window.localStorage.getItem(key) ?? '';
+      const oldValue = window.localStorage.getItem(key);
       const newValue = value == null ? null : JSON.stringify(parse(value));
 
       if (newValue == null) {
@@ -51,5 +51,5 @@ function getSnapshot(key: string) {
 
 function parse(value: unknown) {
   const v = typeof value === 'function' ? value() : value;
-  return typeof value === 'string' ? JSON.parse(v) : v;
+  return v != null && typeof v === 'string' ? JSON.parse(v) : v;
 }
