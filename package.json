@@ -1,6 +1,6 @@
 {
   "name": "@spiffdog/spiffy-hooks",
-  "version": "0.0.10-10",
+  "version": "0.0.11",
   "description": "",
   "type": "module",
   "main": "dist/index.cjs.js",
@@ -50,10 +50,11 @@
     "lint-staged": "^15.4.3",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3",
-    "vite": "^6.2.0",
+    "vite": "^6.2.5",
     "vite-plugin-dts": "^4.5.3"
   },
   "peerDependencies": {
+    "@uidotdev/usehooks": ">=2.4.0",
     "react": ">=18.0.0"
   },
   "optionalDependencies": {
