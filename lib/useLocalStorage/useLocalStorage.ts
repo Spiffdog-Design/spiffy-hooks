@@ -7,18 +7,18 @@ export function useLocalStorage(key: string, initialValue: unknown) {
 
   const setValue = useCallback(
     (value: unknown) => {
-      const oldValue = window.localStorage.getItem(key);
-      const newValue = value == null ? null : JSON.stringify(parse(value));
+      const oldV = window.localStorage.getItem(key);
+      const newV = value == null ? null : JSON.stringify(parse(value));
 
-      if (newValue == null) {
+      if (newV == null) {
         localStorage.removeItem(key);
-      } else if (oldValue !== newValue) {
-        localStorage.setItem(key, newValue);
+      } else if (oldV !== newV) {
+        localStorage.setItem(key, newV);
         window.dispatchEvent(
           new StorageEvent(eventName, {
             key,
-            oldValue,
-            newValue,
+            oldValue: oldV,
+            newValue: newV,
           }),
         );
       }
@@ -51,5 +51,14 @@ function getSnapshot(key: string) {
 
 function parse(value: unknown) {
   const v = typeof value === 'function' ? value() : value;
-  return v != null && typeof v === 'string' ? JSON.parse(v) : v;
+  return isJsonString(v) ? JSON.parse(v) : v;
+}
+
+function isJsonString(value: string): boolean {
+  try {
+    JSON.parse(value);
+  } catch (e) {
+    return false;
+  }
+  return true;
 }
