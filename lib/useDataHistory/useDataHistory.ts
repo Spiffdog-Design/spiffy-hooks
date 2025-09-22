@@ -47,7 +47,7 @@ const reducer = <T>(state: State<T>, action: Action<T>): State<T> => {
   }
 };
 
-export function useHistory<T>(initialValue: T) {
+export function useDataHistory<T>(initialValue: T) {
   const [state, dispatch] = useReducer(reducer, getDefaultState(initialValue));
   const { past, data, future } = state;
 
