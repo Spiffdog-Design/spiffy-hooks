@@ -18,10 +18,11 @@ export default defineConfig({
     sourcemap: true, // Generates source maps for debugging.
     emptyOutDir: true, // Clears the output directory before building.
   },
-  plugins: [dts()], // Uses the 'vite-plugin-dts' plugin for generating TypeScript declaration files (d.ts).
+  plugins: [dts({ exclude: ['**/*.test.ts', '**/*.spec.ts'] })],
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: './setupTests.ts',
+    include: ['lib/**/*.{test,spec}.{ts,tsx}'],
   },
 });

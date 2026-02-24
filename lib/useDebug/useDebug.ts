@@ -13,7 +13,7 @@ interface DebugConfig {
  * @param {string} label Log label. Defaults to 'DEBUG:'.
  * @param {DebugConfig} config Options settings for the hook. Optional.
  */
-export function useDebug(value: unknown = null, label: string = 'DEBUG:', config?: DebugConfig): void {
+export function useDebug(value: unknown = null, label = 'DEBUG:', config?: DebugConfig): void {
   const { basic = true, collapsed = true, enabled = true, trace = false } = config ?? {};
 
   useEffect(() => {

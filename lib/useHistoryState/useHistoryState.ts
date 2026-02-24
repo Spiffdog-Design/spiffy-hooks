@@ -47,7 +47,7 @@ const reducer = <T>(state: State<T>, action: Action<T>): State<T> => {
   }
 };
 
-export function useDataHistory<T>(initialValue: T) {
+export function useHistoryState<T>(initialValue: T) {
   const [state, dispatch] = useReducer(reducer, getDefaultState(initialValue));
   const { past, data, future } = state;
 
@@ -63,5 +63,7 @@ export function useDataHistory<T>(initialValue: T) {
     dispatch({ type: ACTION_TYPES.UNDO });
   };
 
-  return { data, history: { past, future }, actions: { redo, set, undo } };
+  const length = past.length + 1 + future.length;
+
+  return { data, history: { past, future, length }, actions: { redo, set, undo } };
 }

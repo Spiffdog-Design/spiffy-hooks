@@ -14,16 +14,13 @@ export const useUrlParam = (param: string, defaultValue: string | number | null 
   const [value, setValue] = useState<string>(paramVal !== null ? paramVal : String(defaultValue));
 
   function setter(val: string | ((value: string) => string)) {
-    if (typeof val === 'function') {
-      val = val(value);
-    }
-
-    setValue(val);
+    const next = typeof val === 'function' ? val(value) : val;
+    setValue(next);
 
     if (url.has(param)) {
-      url.set(param, val);
+      url.set(param, next);
     } else {
-      url.append(param, val);
+      url.append(param, next);
     }
 
     window.history.replaceState(Object.fromEntries(url), pathname);

@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from 'react';
+import { type RefObject, useEffect } from 'react';
 
 /**
  * @description A custom hook to detect clicks outside a React component.
@@ -7,7 +7,11 @@ import { RefObject, useEffect } from 'react';
  * @param {object} doc The document object to use for event listeners.
  * @returns {Array} An array containing the URL parameter value and the detected click event handler function.
  */
-export const useOutsideClick = (ref: RefObject<HTMLElement>, fn: () => void, doc: Document = document) => {
+export const useOutsideClick = (
+  ref: RefObject<HTMLElement>,
+  fn: () => void,
+  doc: Document = document,
+) => {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (ref.current != null && !ref.current.contains(event.target as Element)) {
