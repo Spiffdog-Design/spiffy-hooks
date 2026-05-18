@@ -7,7 +7,10 @@ import { useOutsideClick } from './useOutsideClick';
 function TestComponent({
   onOutsideClick,
   doc = document,
-}: { onOutsideClick: () => void; doc?: Document }) {
+}: {
+  onOutsideClick: () => void;
+  doc?: Document;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   useOutsideClick(ref, onOutsideClick, doc);
   return (
